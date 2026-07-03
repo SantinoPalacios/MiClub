@@ -34,6 +34,22 @@ class Persona:
         print("Tipo de Identificacion: ",self.get_tipo_identificacion())
         print("Identificacion: ",self.get_identificacion())
         print("Nacionalidad: ",self.get_nacionalidad())
+    
+    def verificar_edad(self):
+        if self.edad > 18:
+            print("La persona es mayor de edad")
+        else:
+            print("La persona es menor de edad")
+    
+    def verificar_identificacion(self,):
+        if len(str(self.__identificacion)) == 8:
+            print("la identificación es válida")
+        else:
+            print("la identificación no es válida")
 
-mipersona = Persona("Micaela",16,"DNI",12345678,"Argentina")
+mipersona = Persona("Micaela",16,"DNI","12345678","Argentina")
 mipersona.mostrar_datos()
+mipersona.verificar_edad()
+mipersona.verificar_identificacion()
+
+# Verificar que la identificación ingresada sea válida y no se encuentre vacía.

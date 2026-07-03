@@ -1,8 +1,14 @@
-class Administrador:
-    def __init__(self, nombre, usuario, contrasenia):
-        self.nombre = nombre
+from clubCategoria import ClubRecreativo
+
+class Administrador(ClubRecreativo):
+    def __init__(self, nombre, descripcion, ubicacion, presidente, fecha_fundacion,nombre_usuario, usuario, contrasenia):
+        super().__init__(nombre, descripcion, ubicacion, presidente, fecha_fundacion)
+        self.nombre_usuario = nombre_usuario
         self.__usuario = usuario
         self.__contrasenia = contrasenia
+
+    def registrar_nuevo_socio(self,socio):
+            super().registrar_socio(socio)
 
     def get_usuario (self):
         return self.__usuario
@@ -16,11 +22,8 @@ class Administrador:
     def set_contrasenia (self, contrasenia):
         self.__contrasenia = contrasenia
     
-    # def mostrar_datos(self):
-    #     print("Nombre: ",self.nombre)
-    #     print("Usuario: ", self.get_usuario())
-    #     print("Contraseña: ",self.get_contrasenia())
 
 
-miadministrador = Administrador("Santino","Santy","aguanteriver")
-# miadministrador.mostrar_datos()
+
+miadministrador = Administrador("River Plate", "Millonario", "Buenos Aires", "Stefano Di Carlo", "25/05/1901","Santino","Santy","aguanteriver")
+miadministrador.registrar_nuevo_socio("Gaspar")
