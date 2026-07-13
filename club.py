@@ -24,7 +24,6 @@ class Club:
         print("Ubicación del club :",self.ubicacion)
         print("Presidente del club : ", self.get_presidente())
         print("Fecha de Fundación del club : ",self.get_fecha_fundacion())
-        
 
 
 miclub = Club("River Plate", "Millonario", "Buenos Aires", "Stefano Di Carlo", "25/05/1901")

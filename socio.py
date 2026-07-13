@@ -1,9 +1,11 @@
-class Socio:
-    def __init__(self, fecha_inscripcion, estado, usuario, contrasenia):
+from cuota import Cuota
+
+class Socio(Cuota):
+    def __init__(self, fecha_inscripcion, estado_cuota, usuario, contrasenia):
         self.clubes = []
         self.cuotas = []
         self.fecha_inscripcion = fecha_inscripcion
-        self.estado = estado
+        self.estado_cuota = estado_cuota
         self.__usuario = usuario
         self.__contrasenia = contrasenia
 
