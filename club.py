@@ -20,6 +20,12 @@ class Club:
     def set_fecha_fundacion(self, fecha_fundacion):
         self.__fecha_fundacion = fecha_fundacion
     
+    def cambiar_presidente(self, nuevo_presidente):
+        anterior_presidente = self.__presidente
+        self.__presidente = nuevo_presidente
+        print("Cambio de autoridades en : ", self.nombre)
+        print("Presidente anterior: ", anterior_presidente)
+        print("Nuevo presidente: ", self.__presidente)
     
     def mostrar_antiguedad(self):
         hoy = date.today()
@@ -45,6 +51,7 @@ class Club:
         else:
             print("El club no es histórico")
 
-miclub = Club("River Plate", "Millonario", "Buenos Aires", "Stefano Di Carlo",  date(1901, 5, 25))
+miclub = Club("River Plate", "Millonario", "Buenos Aires", "Jorge Brito",  date(1901, 5, 25))
+miclub.cambiar_presidente("Stéfano Di Carlo")
 miclub.mostrar_antiguedad()
 miclub.mostrar_info()

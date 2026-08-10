@@ -1,19 +1,49 @@
-class Cuota:
+from datetime import datetime
+
+class Cuota():
     def __init__(self, estado, fecha_vencimiento, periodo):
         self.__estado = estado
         self.fecha_vencimiento = fecha_vencimiento
         self.periodo = periodo
-        
+
     def get_estado(self):
         return self.__estado
-    
+
     def set_estado(self, estado):
         self.__estado = estado
-    
-    # def mostrar_datos(self):
-    #     print("Estado: ", self.get_estado())
-    #     print("Fecha de vencimiento ", self.fecha_vencimiento)
-    #     print("Periodo: ",self.periodo)
 
-micuota = Cuota("pagada","20/05/2025","40 días")
-# micuota.mostrar_datos()
+    def verificar_vencimiento(self, formato="%d/%m/%Y"):
+        fecha_vencimiento = datetime.strptime(self.fecha_vencimiento, formato)
+        fecha_actual = datetime.now()
+        diferencia_dias = (fecha_actual.date() - fecha_vencimiento.date()).days
+
+        if diferencia_dias > 0:
+            return "vencida"
+        elif diferencia_dias == 0:
+            return "vence hoy"
+        else:
+            return "vigente"
+
+
+    def dias_para_vencer(self, formato="%d/%m/%Y"):
+        fecha_vencimiento = datetime.strptime(self.fecha_vencimiento, formato)
+        fecha_actual = datetime.now()
+        dias_restantes = (fecha_vencimiento.date() - fecha_actual.date()).days
+
+        if dias_restantes > 0:
+            return f"Faltan {dias_restantes} días para el vencimiento."
+        elif dias_restantes == 0:
+            return "La cuota vence hoy."
+        else:
+            return f"La cuota venció hace {dias_restantes} días."
+
+    def mostrar_datos(self):
+        print("Estado: ", self.get_estado())
+        print("Fecha de vencimiento: ", self.fecha_vencimiento)
+        print("Periodo: ", self.periodo)
+
+micuota = Cuota("pagada", "20/05/2025", "40 días")
+
+micuota.mostrar_datos()
+print("Verificación:", micuota.verificar_vencimiento())
+print(micuota.dias_para_vencer())

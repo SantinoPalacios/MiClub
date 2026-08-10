@@ -34,6 +34,7 @@ class Persona:
         print("Tipo de Identificacion: ",self.get_tipo_identificacion())
         print("Identificacion: ",self.get_identificacion())
         print("Nacionalidad: ",self.get_nacionalidad())
+        print("hola")
     
     def verificar_edad(self):
         if self.edad > 18:

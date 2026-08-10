@@ -12,9 +12,22 @@ class ClubRecreativo(Club):
     def set_socios (self, socios):
         self.__socios = socios
     
-    def registrar_socio(self,socio):
+    def registrar_socio(self,nombre_socio, activo=True):
+        socio = {"nombre":nombre_socio, "activo":activo}
         self.__socios.append(socio)
         print("Se agregó un socio a la lista", self.__socios)
+    
+    def eliminar_socio(self, nombre):
+        socio = self.buscar_socio(nombre)
+        if socio:
+            self.__socios.remove(socio)
+            print("Se eliminó al socio", socio, "de la lista")
+    
+    def buscar_socio(self, nombre):
+        for socio in self.__socios:
+            if socio["nombre"].lower() == nombre.lower():
+                return socio
+        return None
     
     def mostrar_cantidad(self):
         print("Cantidad de socios:", len(self.__socios))
@@ -25,6 +38,24 @@ class ClubRecreativo(Club):
     
     def mostrar_actividad_deportiva(self):
         print("Cantidad de actividades:",len(self.actividades))
+        print("La lista de actividades:", self.actividades)
+    
+    def eliminar_actividad_deportiva(self, actividad):
+        self.actividades.remove(actividad)
+        print("Se eliminó la actividad", actividad, "de la lista")
+    
+    def calcular_porcentaje_socios(self):
+        if len(self.__socios) == 0:
+            print("No hay socios registrados")
+            return 0
+        cantidad_activos = 0
+        for socio in self.__socios:
+            if socio["activo"]:
+                cantidad_activos = cantidad_activos + 1
+        
+        porcentaje = (cantidad_activos / len(self.__socios)) * 100
+        print ("Porcentaje de activos: ", porcentaje ,"%")
+        return porcentaje
 
 mi_club_recreativo = ClubRecreativo("River Plate", "Millonario", "Buenos Aires", "Stefano Di Carlo", "25/05/1901")
 mi_club_recreativo.registrar_socio("Joaquin")
