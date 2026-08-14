@@ -22,8 +22,30 @@ class Administrador(ClubRecreativo):
     def set_contrasenia (self, contrasenia):
         self.__contrasenia = contrasenia
     
+    def suspender_socio(self, nombre_socio):
+        socio = self.buscar_socio(nombre_socio)
+        if socio is None:
+            print("No se encontró al socio", nombre_socio)
+
+        if socio["activo"] == False:
+            print(nombre_socio ,"ya se encuentra suspendido")
+        else:
+            socio["activo"] = False
+            print(nombre_socio,"fue suspendido")
+    
+    def reactivar_socio(self, nombre_socio):
+        socio = self.buscar_socio(nombre_socio)
+        if socio is None:
+            print("No se encontró al socio", nombre_socio)
+
+        if socio["activo"] == True:
+            print(nombre_socio ,"ya se encuentra activo")
+        else:
+            socio["activo"] = True
+            print(nombre_socio ,"fue reactivado")
 
 
 
 miadministrador = Administrador("River Plate", "Millonario", "Buenos Aires", "Stefano Di Carlo", "25/05/1901","Santino","Santy","aguanteriver")
 miadministrador.registrar_nuevo_socio("Gaspar")
+miadministrador.registrar_socio("Camila")

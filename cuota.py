@@ -35,15 +35,48 @@ class Cuota():
         elif dias_restantes == 0:
             return "La cuota vence hoy."
         else:
-            return f"La cuota venció hace {dias_restantes} días."
+            return f"La cuota venció hace {dias_restantes} días"
 
     def mostrar_datos(self):
         print("Estado: ", self.get_estado())
         print("Fecha de vencimiento: ", self.fecha_vencimiento)
         print("Periodo: ", self.periodo)
+    
+    def registrar_cuota_pagada(self):
+        if self.get_estado() == "pagada":
+            print("Esta cuota ya estaba pagada")
+        else:
+            self.set_estado("pagada")
+            print("Se registró el pago de la cuota del período", self.periodo)
+    
+    def actualizar_estado(self):
+        if self.get_estado() == "pagada":
+            print("La cuota ya está pagada, no hace falta actualizar el estado")
+        
+        resultado = self.verificar_vencimiento()
+        if resultado == "vencida":
+            self.set_estado("vencida")
+            print("La cuota pasó a estado: vencida")
+        else:
+            self.set_estado("pendiente")
+            print("La cuota se mantiene en estado: pendiente")
+    
+    def renovar_cuota(self, nuevo_periodo, nueva_fecha_vencimiento):
+        self.periodo = nuevo_periodo
+        self.fecha_vencimiento = nueva_fecha_vencimiento
+        self.set_estado("pendiente")
+        print("Se renovó la cuota para el período", nuevo_periodo)
+        print("Nueva fecha de vencimiento:", nueva_fecha_vencimiento)
+
 
 micuota = Cuota("pagada", "20/05/2025", "40 días")
 
 micuota.mostrar_datos()
 print("Verificación:", micuota.verificar_vencimiento())
 print(micuota.dias_para_vencer())
+micuota.registrar_cuota_pagada()
+micuota.mostrar_datos()
+micuota.actualizar_estado()
+micuota.mostrar_datos()
+micuota.renovar_cuota("Junio 2025", "20/06/2025")
+micuota.mostrar_datos()

@@ -29,7 +29,7 @@ class ClubRecreativo(Club):
                 return socio
         return None
     
-    def mostrar_cantidad(self):
+    def mostrar_cantidad_socios(self):
         print("Cantidad de socios:", len(self.__socios))
     
     def agregar_actividad_deportiva(self,actividad):
@@ -60,9 +60,9 @@ class ClubRecreativo(Club):
 mi_club_recreativo = ClubRecreativo("River Plate", "Millonario", "Buenos Aires", "Stefano Di Carlo", "25/05/1901")
 mi_club_recreativo.registrar_socio("Joaquin")
 mi_club_recreativo.registrar_socio("Carlos")
-mi_club_recreativo.mostrar_cantidad()
+mi_club_recreativo.mostrar_cantidad_socios()
 mi_club_recreativo.agregar_actividad_deportiva("Basquetball")
 mi_club_recreativo.agregar_actividad_deportiva("Hockey")
 mi_club_recreativo.agregar_actividad_deportiva("Voley")
 mi_club_recreativo.mostrar_actividad_deportiva()
-mi_club_recreativo.mostrar_cantidad()
+mi_club_recreativo.mostrar_cantidad_socios()
