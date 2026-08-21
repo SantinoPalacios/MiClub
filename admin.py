@@ -26,6 +26,7 @@ class Administrador(ClubRecreativo):
         socio = self.buscar_socio(nombre_socio)
         if socio is None:
             print("No se encontró al socio", nombre_socio)
+            return
 
         if socio["activo"] == False:
             print(nombre_socio ,"ya se encuentra suspendido")
@@ -37,6 +38,7 @@ class Administrador(ClubRecreativo):
         socio = self.buscar_socio(nombre_socio)
         if socio is None:
             print("No se encontró al socio", nombre_socio)
+            return
 
         if socio["activo"] == True:
             print(nombre_socio ,"ya se encuentra activo")
@@ -44,8 +46,28 @@ class Administrador(ClubRecreativo):
             socio["activo"] = True
             print(nombre_socio ,"fue reactivado")
 
-
+    def listar_socios(self):
+        socios = self.get_socios()
+        if len(socios) == 0:
+            print("El club no tiene socios registrados")
+            return
+        for socio in socios:
+            print(socio)
+        
+    def verificar_credenciales(self, usuario, contrasenia):
+        if usuario == self.get_usuario() and contrasenia == self.get_contrasenia():
+            print("Acceso concedido")
+            return True
+        else:
+            print("Usuario o contraseña incorrectos")
+            return False
 
 miadministrador = Administrador("River Plate", "Millonario", "Buenos Aires", "Stefano Di Carlo", "25/05/1901","Santino","Santy","aguanteriver")
 miadministrador.registrar_nuevo_socio("Gaspar")
 miadministrador.registrar_socio("Camila")
+miadministrador.listar_socios()
+miadministrador.suspender_socio("Gaspar")
+miadministrador.reactivar_socio("Camila")
+miadministrador.verificar_credenciales("micaela","123")
+
+
