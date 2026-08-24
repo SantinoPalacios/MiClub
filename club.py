@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 class Club:
     def __init__(self, nombre, descripcion, ubicacion, presidente, fecha_fundacion):
@@ -7,7 +7,12 @@ class Club:
         self.ubicacion = ubicacion
         self.__presidente = presidente
         self.__fecha_fundacion = fecha_fundacion
-        
+    
+        if not isinstance(fecha_fundacion, date):
+            raise TypeError("fecha_fundacion debe ser un objeto date, no un str")
+        self.__fecha_fundacion = fecha_fundacion
+
+    
     def get_presidente(self):
         return self.__presidente
     
@@ -27,11 +32,11 @@ class Club:
         print("Presidente anterior: ", anterior_presidente)
         print("Nuevo presidente: ", self.__presidente)
     
-    def mostrar_antiguedad(self): # Mostrar antiguedad lo hacen con obj, pero le pasan la fecha como str es incoherencia en tipos de datos.
+    def mostrar_antiguedad(self, formato="%d/%m/%Y"):
+        fecha_fundacion = datetime.strptime(self.__fecha_fundacion, formato).date()
         hoy = date.today()
-        años = hoy.year - self.__fecha_fundacion.year
-
-        if (hoy.month, hoy.day) < (self.__fecha_fundacion.month, self.__fecha_fundacion.day):
+        años = hoy.year - fecha_fundacion.year
+        if (hoy.month, hoy.day) < (fecha_fundacion.month, fecha_fundacion.day):
             años -= 1
         return años
     

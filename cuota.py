@@ -24,34 +24,34 @@ class Cuota():
         else:
             return "vigente"
 
-
-    def dias_para_vencer(self, formato="%d/%m/%Y"): # Me devuelve un numero negativo hay un metodo abs de valor absoluto que modifica eso. 
+    def dias_para_vencer(self, formato="%d/%m/%Y"):
         fecha_vencimiento = datetime.strptime(self.fecha_vencimiento, formato)
         fecha_actual = datetime.now()
-        dias_restantes = (fecha_vencimiento.date() - fecha_actual.date()).days 
+        dias_restantes = (fecha_vencimiento.date() - fecha_actual.date()).days
 
         if dias_restantes > 0:
             return f"Faltan {dias_restantes} días para el vencimiento."
         elif dias_restantes == 0:
             return "La cuota vence hoy."
         else:
-            return f"La cuota venció hace {dias_restantes} días"
+            return f"La cuota venció hace {abs(dias_restantes)} días"
 
     def mostrar_datos(self):
         print("Estado: ", self.get_estado())
         print("Fecha de vencimiento: ", self.fecha_vencimiento)
         print("Periodo: ", self.periodo)
-    
+
     def registrar_cuota_pagada(self):
         if self.get_estado() == "pagada":
             print("Esta cuota ya estaba pagada")
         else:
             self.set_estado("pagada")
             print("Se registró el pago de la cuota del período", self.periodo)
-    
-    def actualizar_estado(self): # esta funcion tira un bug pisa los valores de la variable entonces hay que retornar para que la funcion corte ahí.
-        print("La cuota ya está pagada, no hace falta actualizar el estado")
-        
+
+    def actualizar_estado(self):
+        if self.get_estado() == "pagada":
+            print("La cuota ya está pagada, no hace falta actualizar el estado")
+            return
         resultado = self.verificar_vencimiento()
         if resultado == "vencida":
             self.set_estado("vencida")
@@ -59,7 +59,7 @@ class Cuota():
         else:
             self.set_estado("pendiente")
             print("La cuota se mantiene en estado: pendiente")
-    
+
     def renovar_cuota(self, nuevo_periodo, nueva_fecha_vencimiento):
         self.periodo = nuevo_periodo
         self.fecha_vencimiento = nueva_fecha_vencimiento
