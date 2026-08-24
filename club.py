@@ -27,7 +27,7 @@ class Club:
         print("Presidente anterior: ", anterior_presidente)
         print("Nuevo presidente: ", self.__presidente)
     
-    def mostrar_antiguedad(self):
+    def mostrar_antiguedad(self): # Mostrar antiguedad lo hacen con obj, pero le pasan la fecha como str es incoherencia en tipos de datos.
         hoy = date.today()
         años = hoy.year - self.__fecha_fundacion.year
 

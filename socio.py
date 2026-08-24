@@ -1,6 +1,6 @@
 from cuota import Cuota
 
-class Socio(Cuota):
+class Socio(Cuota): # socios no puede heredar de cuota un socio tiene que heredar de una persona y tener los atributos de persona.
     def __init__(self, fecha_inscripcion, estado_cuota, usuario, contrasenia):
         self.clubes = []
         self.cuotas = []
@@ -25,7 +25,7 @@ class Socio(Cuota):
         print("Fecha de inscripción: ", self.fecha_inscripcion)
         print("Estado: ", self.estado_cuota)
         print("Usuario: ",self.get_usuario())
-        print("Contraseña: ",self.get_contrasenia())
+        print("Contraseña: ",self.get_contrasenia()) # No hay que mostar la contraseña del socio ya que es un dato privado.
     
     def asociar_club(self, club):
         if club in self.clubes:
@@ -76,7 +76,7 @@ class Socio(Cuota):
             print("El socio se encuentra suspendido")
         else:
             self.estado_cuota = "suspendido"
-            print("El socio está supendido")
+            print("El socio está supendido") # Falta la s 
     
     def reactivar_socio(self):
         if self.estado_cuota == "activo":

@@ -25,10 +25,10 @@ class Cuota():
             return "vigente"
 
 
-    def dias_para_vencer(self, formato="%d/%m/%Y"):
+    def dias_para_vencer(self, formato="%d/%m/%Y"): # Me devuelve un numero negativo hay un metodo abs de valor absoluto que modifica eso. 
         fecha_vencimiento = datetime.strptime(self.fecha_vencimiento, formato)
         fecha_actual = datetime.now()
-        dias_restantes = (fecha_vencimiento.date() - fecha_actual.date()).days
+        dias_restantes = (fecha_vencimiento.date() - fecha_actual.date()).days 
 
         if dias_restantes > 0:
             return f"Faltan {dias_restantes} días para el vencimiento."
@@ -49,9 +49,8 @@ class Cuota():
             self.set_estado("pagada")
             print("Se registró el pago de la cuota del período", self.periodo)
     
-    def actualizar_estado(self):
-        if self.get_estado() == "pagada":
-            print("La cuota ya está pagada, no hace falta actualizar el estado")
+    def actualizar_estado(self): # esta funcion tira un bug pisa los valores de la variable entonces hay que retornar para que la funcion corte ahí.
+        print("La cuota ya está pagada, no hace falta actualizar el estado")
         
         resultado = self.verificar_vencimiento()
         if resultado == "vencida":
