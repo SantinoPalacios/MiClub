@@ -1,4 +1,3 @@
-
 class Persona:
     def __init__(self, nombre_completo, edad, tipo_identificacion, identificacion, nacionalidad):
         self.nombre_completo = nombre_completo
@@ -29,25 +28,20 @@ class Persona:
 
 
     def mostrar_datos(self):
-        print("Nombre completo: ", self.nombre_completo)
-        print("Edad : ", self.edad)
-        print("Tipo de Identificacion: ",self.get_tipo_identificacion())
-        print("Identificacion: ",self.get_identificacion())
-        print("Nacionalidad: ",self.get_nacionalidad())
-    
+        return (f"Nombre completo: {self.nombre_completo}, "
+            f"Edad: {self.edad}, "
+            f"Tipo de Identificación: {self.get_tipo_identificacion()}, "
+            f"Identificación: {self.get_identificacion()}, "
+            f"Nacionalidad: {self.get_nacionalidad()}")
+
     def verificar_edad(self):
         if self.edad >= 18:
-            print("La persona es mayor de edad")
+            return "La persona es mayor de edad"
         else:
-            print("La persona es menor de edad")
+            return "La persona es menor de edad"
     
     def verificar_identificacion(self,):
         if len(str(self.__identificacion)) == 8:
-            print("la identificación es válida")
+            return "la identificación es válida"
         else:
-            print("la identificación no es válida")
-
-mipersona = Persona("Micaela",16,"DNI","12345678","Argentina")
-mipersona.mostrar_datos()
-mipersona.verificar_edad()
-mipersona.verificar_identificacion()
+            return "la identificación no es válida"

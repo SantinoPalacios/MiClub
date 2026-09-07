@@ -28,9 +28,7 @@ class Club:
     def cambiar_presidente(self, nuevo_presidente):
         anterior_presidente = self.__presidente
         self.__presidente = nuevo_presidente
-        print("Cambio de autoridades en : ", self.nombre)
-        print("Presidente anterior: ", anterior_presidente)
-        print("Nuevo presidente: ", self.__presidente)
+        return f"Cambio de autoridades en {self.nombre}. Presidente anterior: {anterior_presidente}, Nuevo presidente: {self.__presidente}"
 
     def mostrar_antiguedad(self):
         fecha_fundacion = self.__fecha_fundacion
@@ -44,18 +42,18 @@ class Club:
         return self.mostrar_antiguedad() > 50
 
     def mostrar_info(self):
-        print("Nombre del club : ", self.nombre)
-        print("Descripción del club :", self.descripcion)
-        print("Ubicación del club :", self.ubicacion)
-        print("Presidente del club : ", self.get_presidente())
-        print("Fecha de Fundación del club : ", self.get_fecha_fundacion())
-        print("Antiguedad:", self.mostrar_antiguedad(), "años")
+        return (f"Nombre del club: {self.nombre}, "
+            f"Descripción del club: {self.descripcion}, "
+            f"Ubicación del club: {self.ubicacion}, "
+            f"Presidente del club: {self.get_presidente()}, "
+            f"Fecha de Fundación del club: {self.get_fecha_fundacion()}, "
+            f"Antigüedad: {self.mostrar_antiguedad()} años")
 
+    def mensaje_historico(self):
         if self.es_historico():
-            print("El club es histórico")
+            return "El club es histórico"
         else:
-            print("El club no es histórico")
-
+            return "El club no es histórico"
 
 miclub = Club("River Plate", "Millonario", "Buenos Aires", "Jorge Brito", date(1901, 5, 25))
 miclub.cambiar_presidente("Stéfano Di Carlo")

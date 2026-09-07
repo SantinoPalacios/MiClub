@@ -1,7 +1,7 @@
-from persona import Persona
+from modelo.persona import Persona
 
 class Socio(Persona):
-    def __init__(self, nombre_completo, edad, tipo_identificacion, identificacion, nacionalidad, fecha_inscripcion, estado_cuota, usuario, contrasenia):
+    def __init__(self, nombre_completo, edad, tipo_identificacion, identificacion, nacionalidad, fecha_inscripcion, estado_cuota, usuario, contrasenia,rol):
         super().__init__(nombre_completo,edad,tipo_identificacion,identificacion,nacionalidad)
         self.clubes = []
         self.cuotas = []
@@ -9,6 +9,7 @@ class Socio(Persona):
         self.estado_cuota = estado_cuota
         self.__usuario = usuario
         self.__contrasenia = contrasenia
+        self.rol = rol
 
     def get_usuario(self):
         return self.__usuario
@@ -108,26 +109,8 @@ class Socio(Persona):
         else:
             print("Usuario o contraseña incorrectos")
             return False
+        
+    def es_admin(self):
+        return self.rol == "admin"
 
-misocio = Socio("Juan Perez",25,"DNI","12345678","Argentina","1/10/2021","activo","juanin","elmascapo456")
 
-misocio.mostrar_datos()
-misocio.asociar_club("Boca Juniors")
-misocio.asociar_club("River Plate")
-misocio.dejar_club("Boca Juniors")
-misocio.dejar_club("Racing Club")
-misocio.generar_cuota("01/06/2026", 5000)
-misocio.generar_cuota("02/07/2026", 5000)
-misocio.generar_cuota("03/08/2026", 5500)
-misocio.tiene_deudas()
-misocio.cantidad_cuotas_pendientes()
-misocio.pagar_cuota("02/07/2026")
-misocio.tiene_deudas()
-misocio.cantidad_cuotas_pendientes()
-misocio.suspender_socio()
-misocio.reactivar_socio()
-misocio.actualizar_contrasenia("elmascapo456", "hola123")
-misocio.verificar_acceso("fede", "kiwi345")
-misocio.verificar_acceso("juanin", "kiwi345")
-misocio.verificar_acceso("fede", "hola123")
-misocio.verificar_acceso("juanin", "hola123")
