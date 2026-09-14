@@ -54,8 +54,3 @@ class Club:
             return "El club es histórico"
         else:
             return "El club no es histórico"
-
-miclub = Club("River Plate", "Millonario", "Buenos Aires", "Jorge Brito", date(1901, 5, 25))
-miclub.cambiar_presidente("Stéfano Di Carlo")
-print("Antigüedad:", miclub.mostrar_antiguedad(), "años")
-miclub.mostrar_info()
