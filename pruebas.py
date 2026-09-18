@@ -63,8 +63,11 @@
 
 from datetime import date
 from pathlib import Path
-from base_datos.base_datoss import conectar, crear_tablas, guardar_socio
+from base_datos.base_datoss import conectar, crear_tablas, guardar_socio, guardar_cuota
 from modelo.socio import Socio
+from modelo.cuota import Cuota
+
+
 
 RUTA = Path(__file__).parent / "club.db"
 
@@ -80,12 +83,18 @@ crear_tablas(conexion)
 # guardar_socio(conexion, carlos)
 # print("Socio guardado.")
 
-joaquin = Socio(
-    "Joaquin Valenzuela ", 25, "DNI", "20234507", "Argentina",
-    date(2025, 2, 3), "Activo", "joaquin", "aguanteriver123", "socio"
+valentino = Socio(
+    "Valentino ", 25, "DNI", "20234507", "Argentina",
+    date(2025, 2, 3), "Activo", "valentino", "hola456", "socio"
 )
-guardar_socio(conexion, joaquin)
+guardar_socio(conexion, valentino)
 print("Socio guardado.")
 
-# Cerrar la conexión
+cuota1 = Cuota(
+    "pendiente",date(2022,9,22),"22 días"
+)
+guardar_cuota(conexion, cuota1)
+print("Cuota registrada.")
+
+
 conexion.close()
