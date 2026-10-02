@@ -64,6 +64,29 @@ def guardar_socio(conexion, socio):
     conexion.commit()
 
 
+def buscar_socio_por_usuario(conexion, usuario):
+    """Devuelve el objeto Socio con ese usuario, o None si no existe."""
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT id, nombre_completo, edad, tipo_identificacion, identificacion,
+            nacionalidad, fecha_inscripcion, estado, rol, usuario, contrasenia
+        FROM socios
+        WHERE usuario = ?
+    """, (usuario,))
+    fila = cursor.fetchone()
+    if fila is None:
+        return None
+
+    (_id, nombre_completo, edad, tipo_identificacion, identificacion,
+    nacionalidad, fecha_inscripcion, estado, rol, usuario, contrasenia) = fila
+
+    from modelo.socio import Socio
+    return Socio(
+        nombre_completo, edad, tipo_identificacion, identificacion, nacionalidad,
+        date.fromisoformat(fecha_inscripcion), estado, usuario, contrasenia, rol
+    )
+
+
 def guardar_cuota(conexion, usuario, cuota):
     """Guarda una cuota asociada al socio con ese nombre de usuario."""
     cursor = conexion.cursor()
