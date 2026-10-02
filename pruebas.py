@@ -61,13 +61,12 @@
 # print(miclub.mostrar_info())
 # print(miclub.mensaje_historico())
 
+"""Prueba de la capa de base de datos."""
 from datetime import date
 from pathlib import Path
 from base_datos.base_datoss import conectar, crear_tablas, guardar_socio, guardar_cuota
 from modelo.socio import Socio
 from modelo.cuota import Cuota
-
-
 
 RUTA = Path(__file__).parent / "club.db"
 
@@ -75,25 +74,15 @@ RUTA = Path(__file__).parent / "club.db"
 conexion = conectar(str(RUTA))
 crear_tablas(conexion)
 
-# Crear y guardar un socio
-# carlos = Socio(
-#     "Carlos Ramos ", 30, "DNI", "40322345", "Argentina",
-#     date(2026, 1, 1), "Activo", "carlos", "clave123", "socio"
-# )
-# guardar_socio(conexion, carlos)
-# print("Socio guardado.")
-
-valentino = Socio(
-    "Valentino ", 25, "DNI", "20234507", "Argentina",
-    date(2025, 2, 3), "Activo", "valentino", "hola456", "socio"
+uma = Socio(
+    "Uma", 10, "DNI", "20234507", "Argentina",
+    date(2025, 2, 3), "Activo", "uma", "12345", "socio"
 )
-guardar_socio(conexion, valentino)
+guardar_socio(conexion, uma)
 print("Socio guardado.")
 
-cuota1 = Cuota(
-    "pendiente",date(2022,9,22),"22 días"
-)
-guardar_cuota(conexion, cuota1)
+cuota1 = Cuota("pendiente", date(2022, 9, 22), "22 días")
+guardar_cuota(conexion, cuota1, uma.get_usuario())
 print("Cuota registrada.")
 
 

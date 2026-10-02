@@ -9,7 +9,9 @@ def conectar(ruta):
     conexion = sqlite3.connect(ruta)
     return conexion
 
+
 def crear_tablas(conexion):
+    """Crea las tablas necesarias si no existen."""
     cursor = conexion.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS socios (
@@ -28,17 +30,19 @@ def crear_tablas(conexion):
     """)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cuota (
-            id_cuota                  INTEGER PRIMARY KEY AUTOINCREMENT,
-            fecha_vencimiento         TEXT,
-            periodo                   TEXT,
-            estado                    TEXT DEFAULT 'Pendiente',
-            socio_id                  INTEGER NOT NULL,
+            id_cuota          INTEGER PRIMARY KEY AUTOINCREMENT,
+            fecha_vencimiento TEXT,
+            periodo           TEXT,
+            estado            TEXT DEFAULT 'Pendiente',
+            socio_id          INTEGER NOT NULL,
             FOREIGN KEY (socio_id) REFERENCES socios(id)
         )
     """)
     conexion.commit()
 
+
 def guardar_socio(conexion, socio):
+    """Recibe un objeto Socio y lo guarda en la tabla socios."""
     cursor = conexion.cursor()
     cursor.execute("""
         INSERT INTO socios (nombre_completo, edad, tipo_identificacion,
@@ -52,40 +56,46 @@ def guardar_socio(conexion, socio):
         socio.get_identificacion(),
         socio.get_nacionalidad(),
         socio.fecha_inscripcion.isoformat(),
-        socio.estado_cuota,
+        socio.estado_cuota,          # <-- corregido
         socio.rol,
         socio.get_usuario(),
         socio.get_contrasenia(),
     ))
     conexion.commit()
 
-def guardar_cuota(conexion,couta,usuario):
+
+def guardar_cuota(conexion, cuota, usuario):
+    """Guarda una cuota asociada al socio con ese nombre de usuario."""
     cursor = conexion.cursor()
     cursor.execute("SELECT id FROM socios WHERE usuario = ?", (usuario,))
     fila = cursor.fetchone()
     if fila is None:
         raise ValueError("El socio no existe")
-
     socio_id = fila[0]
 
     cursor.execute("""
-        INSERT INTO cuota(fecha_vencimiento,periodo,estado) VALUES (?, ?, ?)
-    """,(
-        couta.fecha_vencimiento(),
-        couta.periodo(),
-        couta.get_estado(),
+        INSERT INTO cuota (fecha_vencimiento, periodo, estado, socio_id)
+        VALUES (?, ?, ?, ?)
+    """, (
+        cuota.fecha_vencimiento.isoformat(),
+        cuota.periodo,
+        cuota.get_estado(),
+        socio_id,
     ))
     conexion.commit()
 
+
 def listar_cuotas_de_socio(conexion, usuario):
+    """Devuelve una lista de objetos Cuota del socio indicado."""
     cursor = conexion.cursor()
     cursor.execute("SELECT id FROM socios WHERE usuario = ?", (usuario,))
     fila = cursor.fetchone()
     if fila is None:
         return []
     socio_id = fila[0]
+
     cursor.execute(
-        "SELECT periodo, estado, fecha_vencimiento FROM cuotas WHERE socio_id = ?",
+        "SELECT periodo, estado, fecha_vencimiento FROM cuota WHERE socio_id = ?",
         (socio_id,)
     )
     cuotas = []

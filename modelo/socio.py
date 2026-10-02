@@ -108,4 +108,3 @@ class Socio(Persona):
 
     def es_admin(self):
         return self.rol == "admin"
-    
