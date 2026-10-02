@@ -29,7 +29,7 @@ def crear_tablas(conexion):
         )
     """)
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS cuota (
+        CREATE TABLE IF NOT EXISTS cuotas (
             id_cuota          INTEGER PRIMARY KEY AUTOINCREMENT,
             fecha_vencimiento TEXT,
             periodo           TEXT,
@@ -56,7 +56,7 @@ def guardar_socio(conexion, socio):
         socio.get_identificacion(),
         socio.get_nacionalidad(),
         socio.fecha_inscripcion.isoformat(),
-        socio.estado_cuota,          # <-- corregido
+        socio.estado_cuota,
         socio.rol,
         socio.get_usuario(),
         socio.get_contrasenia(),
@@ -64,7 +64,7 @@ def guardar_socio(conexion, socio):
     conexion.commit()
 
 
-def guardar_cuota(conexion, cuota, usuario):
+def guardar_cuota(conexion, usuario, cuota):
     """Guarda una cuota asociada al socio con ese nombre de usuario."""
     cursor = conexion.cursor()
     cursor.execute("SELECT id FROM socios WHERE usuario = ?", (usuario,))
@@ -74,7 +74,7 @@ def guardar_cuota(conexion, cuota, usuario):
     socio_id = fila[0]
 
     cursor.execute("""
-        INSERT INTO cuota (fecha_vencimiento, periodo, estado, socio_id)
+        INSERT INTO cuotas (fecha_vencimiento, periodo, estado, socio_id)
         VALUES (?, ?, ?, ?)
     """, (
         cuota.fecha_vencimiento.isoformat(),
@@ -95,7 +95,7 @@ def listar_cuotas_de_socio(conexion, usuario):
     socio_id = fila[0]
 
     cursor.execute(
-        "SELECT periodo, estado, fecha_vencimiento FROM cuota WHERE socio_id = ?",
+        "SELECT periodo, estado, fecha_vencimiento FROM cuotas WHERE socio_id = ?",
         (socio_id,)
     )
     cuotas = []
