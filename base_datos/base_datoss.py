@@ -239,21 +239,27 @@ def desanotar_socio_actividad(conexion, usuario, nombre_actividad):
         (socio_id, actividad_id)
     )
     conexion.commit()
-    return f"Te desanotaste en {nombre_actividad}."
+    return f"Te desanotaste de {nombre_actividad}."
+
 
 def listar_actividades_de_socio(conexion, usuario):
-    """Devuelve una lista de objetos Actividad del socio indicado."""
     cursor = conexion.cursor()
-
-    cursor.execute("SELECT id FROM socios WHERE usuario = ?", (usuario,))
+    cursor.execute(
+        "SELECT id FROM socios WHERE usuario = ?",
+        (usuario,)
+    )
     fila = cursor.fetchone()
+
     if fila is None:
         return []
 
     socio_id = fila[0]
 
     cursor.execute("""
-        SELECT actividades.nombre, actividades.dia, actividades.horario
+        SELECT actividades.nombre,
+        actividades.dia,
+        actividades.horario,
+        actividades.club_id
         FROM actividades
         INNER JOIN socio_actividad
         ON actividades.id_actividad = socio_actividad.actividad_id
@@ -262,8 +268,25 @@ def listar_actividades_de_socio(conexion, usuario):
 
     actividades = []
 
-    for nombre, dia, horario in cursor.fetchall():
-        actividad = Actividad(nombre, dia, horario)
+    # Crear un objeto Actividad con sus cuatro atributos
+    for nombre, dia, horario, club_id in cursor.fetchall():
+        actividad = Actividad(nombre, dia, horario, club_id)
         actividades.append(actividad)
 
     return actividades
+
+def obtener_club(conexion):
+    """Devuelve el objeto Club o None si no hay club cargado."""
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT nombre, descripcion, ubicacion, presidente, fecha_fundacion
+        FROM clubes
+        LIMIT 1
+    """)
+    fila = cursor.fetchone()
+    if fila is None:
+        return None
+    nombre, descripcion, ubicacion, presidente, fecha_fundacion = fila
+    from modelo.club import Club
+    fecha_fundacion = date.fromisoformat(fecha_fundacion)
+    return Club(nombre, descripcion, ubicacion, presidente, fecha_fundacion)

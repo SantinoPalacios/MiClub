@@ -3,10 +3,14 @@ from datetime import date
 from pathlib import Path
 from base_datos.base_datoss import (
     conectar, crear_tablas, guardar_socio, guardar_cuota,
-    listar_cuotas_de_socio, buscar_socio_por_usuario
+    listar_cuotas_de_socio, buscar_socio_por_usuario, guardar_club, 
+    guardar_actividad, anotar_socio_actividad, desanotar_socio_actividad, 
+    listar_actividades_de_socio, obtener_club
 )
 from modelo.socio import Socio
 from modelo.cuota import Cuota
+from modelo.actividad import Actividad
+from modelo.club import Club
 
 RUTA = Path(__file__).parent / "club.db"
 
@@ -48,5 +52,53 @@ print(encontrado.mostrar_datos())
 
 inexistente = buscar_socio_por_usuario(conexion, "nadie")
 print(inexistente)   # debería imprimir None
+buscar_socio_por_usuario(conexion, "carlos")
+listar_cuotas_de_socio(conexion, "ana")
+
+# Crear y guardar club
+river_plate = Club("river plate", "el más grande y millonario de rojo y blanco", "Buenos Aires", "Stéfano Di Carlo", date(1901, 5, 25))
+guardar_club(conexion, river_plate)
+cursor = conexion.cursor()
+cursor.execute(
+    "SELECT id_club FROM clubes WHERE nombre = ?",
+    ("river plate",)
+)
+fila = cursor.fetchone()
+club_id = fila[0]
+
+# Tres actividades
+basquetball = Actividad("basquetball", "viernes", "7PM", club_id)
+futbol = Actividad("fútbol", "miércoles", "6PM", club_id)
+ballet = Actividad("ballet","jueves","5PM", club_id)
+guardar_actividad(conexion, basquetball)
+guardar_actividad(conexion, futbol)
+guardar_actividad(conexion, ballet)
+
+# Anotar
+anotar_socio_actividad(conexion, "uma", "ballet")
+anotar_socio_actividad(conexion, "uma", "basquetball")
+anotar_socio_actividad(conexion, "carlos", "fútbol")
+anotar_socio_actividad(conexion, "carlos", "ballet")
+anotar_socio_actividad(conexion, "ana" , "basquetball")
+anotar_socio_actividad(conexion, "ana", "fútbol")
+
+# Listar desanotar
+desanotar_socio_actividad(conexion, "carlos", "fútbol")
+desanotar_socio_actividad(conexion, "ana", "basquetball")
+
+# Listar actividades
+for usuario in ("uma", "ana", "carlos"):
+    print(f"Actividades de {usuario}:")
+
+    for actividad in listar_actividades_de_socio(conexion, usuario):
+        print("  ", actividad.mostrarInfo())
+
+club = obtener_club(conexion)
+if club is not None:
+    print("Nombre:", club.nombre)
+    print("Descripción:", club.descripcion)
+    print("Ubicación:", club.ubicacion)
+    print("Presidente:", club.get_presidente())
+    print("Fecha de fundación:", club.get_fecha_fundacion())
 
 conexion.close()
