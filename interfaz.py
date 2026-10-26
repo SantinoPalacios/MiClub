@@ -73,9 +73,24 @@ def crear_boton_padre(texto, funcion):
     ).pack(fill="x", padx=8, pady=3)
 
 
-def mostrar_menu():
-    # Oculta la pantalla de acceso.
+def ocultar_menu():
+    menu.pack_forget()
     contenido.pack_forget()
+
+    contenido.pack(
+        fill="both",
+        expand=True
+    )
+
+def mostrar_menu():
+    # Quita la disposición anterior del contenido.
+    contenido.pack_forget()
+
+    # Muestra el menú lateral.
+    menu.pack(
+        side="left",
+        fill="y"
+    )
 
     # Muestra el contenido a la derecha.
     contenido.pack(
@@ -84,16 +99,6 @@ def mostrar_menu():
         expand=True,
         padx=12,
         pady=12
-    )
-
-
-def ocultar_menu():
-    menu.pack_forget()
-    contenido.pack_forget()
-
-    contenido.pack(
-        fill="both",
-        expand=True
     )
 
 
@@ -163,9 +168,8 @@ def mostrar_bienvenida():
     ).pack(pady=5)
 
 
-# ==================================================
-# REGISTRO DE CUENTA Y SOCIO
-# ==================================================
+
+# Registro De Cuenta y Socio
 
 def mostrar_registro():  # Muestra el formulario para registrar un socio.
     limpiar_contenido()  # Limpia los elementos de la pantalla.
@@ -283,9 +287,7 @@ def mostrar_registro():  # Muestra el formulario para registrar un socio.
     tk.Button(contenido, text="Volver al inicio", command=mostrar_bienvenida, bg=BLANCO, fg=TEXTO, relief="flat", cursor="hand2").pack()  # Crea el botón para volver.
 
 
-# ==================================================
-# INICIO DE SESIÓN
-# ==================================================
+# Inicio De Sesión
 
 def mostrar_login():  # Muestra el formulario de inicio de sesión.
     limpiar_contenido()  # Limpia la pantalla.
@@ -297,11 +299,7 @@ def mostrar_login():  # Muestra el formulario de inicio de sesión.
     formulario = tk.Frame(contenido, bg=BLANCO)  # Crea el contenedor del formulario.
     formulario.pack(pady=20)  # Coloca el formulario
 
-        # Contenedor del campo de usuario.
-    frame_usuario = tk.Frame(formulario, bg=BLANCO)
-    frame_usuario.pack(pady=(5, 15), anchor="w")
-
-# Etiqueta del usuario.
+    # Etiqueta del usuario.
     tk.Label(
         formulario,
         text="Nombre de usuario:",
@@ -309,12 +307,12 @@ def mostrar_login():  # Muestra el formulario de inicio de sesión.
         bg=BLANCO
         ).pack(anchor="w")
 
-# Campo de usuario.
+    # Campo de usuario.
     entrada_usuario = tk.Entry(
-    formulario,
-    font=("Arial", 12),
-    width=27
-)
+        formulario,
+        font=("Arial", 12),
+        width=27
+    )
     entrada_usuario.pack(anchor="w", pady=(5, 15))
 
     tk.Label(formulario, text="Contraseña:", font=("Arial", 11, "bold"), bg=BLANCO).pack(anchor="w")
