@@ -25,8 +25,12 @@ crear_tablas(conexion)
 
 brenda= Socio("Brenda Giselle Isabella", 26, "DNI", "34567890","Argentina",date(2026, 10, 26),"activo","brendu","racingclub","socio")
 guardar_socio(conexion, brenda)
-print ("Socia guardada.")
 socio = autenticar("brendu", "racingclub")
+
+# Ejemplos de Autenticación Fallida
+# socio = autenticar("brendu", "riverplate")
+# socio = autenticar("brendo", "racingclub")
+# socio = autenticar("brendo", "riverplate")
 
 if socio is None:
     print("El socio no existe o los datos son incorrectos.")
@@ -34,6 +38,8 @@ else:
     print("Nombre:", socio.nombre_completo)
     print("Usuario:", socio.get_usuario())
     print("Rol:", socio.rol)
+    print ("Socia guardada.")
+
 
 conexion.close()
 
