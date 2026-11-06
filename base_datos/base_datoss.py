@@ -2,6 +2,8 @@ import sqlite3
 from datetime import date
 from modelo.cuota import Cuota
 from modelo.actividad import Actividad
+from modelo.club import Club
+from modelo.socio import Socio
 
 
 def conectar(ruta):
@@ -47,6 +49,14 @@ def crear_tablas(conexion):
             ubicacion         TEXT,
             presidente        TEXT,
             fecha_fundacion   TEXT
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS socio_club (
+            socio_id INTEGER REFERENCES socios(id),
+            club_id  INTEGER REFERENCES clubes(id),
+            PRIMARY KEY (socio_id, club_id)
         )
     """)
 
@@ -290,3 +300,116 @@ def obtener_club(conexion):
     from modelo.club import Club
     fecha_fundacion = date.fromisoformat(fecha_fundacion)
     return Club(nombre, descripcion, ubicacion, presidente, fecha_fundacion)
+
+
+def asociar_socio_club(conexion, usuario, nombre_club):
+    """Asocia al socio con el club indicado."""
+    cursor = conexion.cursor()
+
+    cursor.execute("SELECT id FROM socios WHERE usuario = ?", (usuario,))
+    fila = cursor.fetchone()
+
+    if fila is None:
+        return "El socio no existe."
+
+    socio_id = fila[0]
+
+    cursor.execute("SELECT id_club FROM clubes WHERE nombre = ?", (nombre_club,))
+    fila = cursor.fetchone()
+
+    if fila is None:
+        return f"El club {nombre_club} no existe."
+
+    club_id = fila[0]
+
+    # Asociar al socio con el club
+    cursor.execute(
+        "INSERT OR IGNORE INTO socio_club (socio_id, club_id) VALUES (?, ?)",
+        (socio_id, club_id)
+    )
+
+    conexion.commit()
+    return f"Te asociaste al club {nombre_club}."
+
+
+def listar_clubes_de_socio(conexion, usuario):
+    cursor = conexion.cursor()
+    cursor.execute(
+        "SELECT id FROM socios WHERE usuario = ?",
+        (usuario,)
+    )
+    fila = cursor.fetchone()
+
+    if fila is None:
+        return []
+
+    socio_id = fila[0]
+
+    cursor.execute("""
+        SELECT clubes.nombre,
+        clubes.descripcion,
+        clubes.ubicacion,
+        clubes.presidente,
+        clubes.fecha_fundacion
+        FROM clubes
+        INNER JOIN socio_club
+        ON clubes.id_club = socio_club.club_id
+        WHERE socio_club.socio_id = ?
+    """, (socio_id,))
+
+    clubes = []
+    # Crear un objeto Club con sus cinco atributos
+    for nombre, descripcion, ubicacion, presidente, fecha_fundacion in cursor.fetchall():
+        club = Club(nombre, descripcion, ubicacion, presidente, fecha_fundacion)
+        clubes.append(club)
+
+    return clubes
+
+def listar_socio(conexion):
+    """Devuelve una lista con todos los socios registrados."""
+    cursor = conexion.cursor()
+
+    cursor.execute("""
+        SELECT id, nombre_completo, edad, tipo_identificacion,
+            identificacion, nacionalidad, fecha_inscripcion,
+            estado, rol, usuario, contrasenia
+        FROM socios
+    """)
+
+    socios = []
+
+    for fila in cursor.fetchall():
+        (_id, nombre_completo, edad, tipo_identificacion, identificacion,
+        nacionalidad, fecha_inscripcion, estado, rol, usuario,
+        contrasenia) = fila
+
+        socio = Socio(
+            nombre_completo, edad, tipo_identificacion, identificacion,
+            nacionalidad, date.fromisoformat(fecha_inscripcion),
+            estado, usuario, contrasenia, rol
+        )
+
+        socios.append(socio)
+
+    return socios
+
+def pagar_cuota(conexion, usuario, periodo):
+    """Cambia el estado de la cuota indicada a Pagada."""
+    cursor = conexion.cursor()
+
+    cursor.execute("SELECT id FROM socios WHERE usuario = ?", (usuario,))
+    fila = cursor.fetchone()
+
+    if fila is None:
+        return "El socio no existe."
+
+    socio_id = fila[0]
+
+    cursor.execute("""
+        UPDATE cuotas
+        SET estado = 'Pagada'
+        WHERE socio_id = ? AND periodo = ?
+    """, (socio_id, periodo))
+
+    conexion.commit()
+    return f"La cuota del período {periodo} fue pagada correctamente."
