@@ -1,6 +1,5 @@
 from datetime import date
 from pathlib import Path
-
 from base_datos.base_datoss import (
     buscar_socio_por_usuario,
     conectar,
@@ -12,7 +11,6 @@ from modelo.socio import Socio
 
 RUTA_DB = Path(__file__).parent.parent / "club.db"
 
-
 def listar_socios():
     """Devuelve una lista con todos los socios."""
     conexion = conectar(str(RUTA_DB))
@@ -20,7 +18,6 @@ def listar_socios():
         return listar_socio(conexion)
     finally:
         conexion.close()
-
 
 def listar_clubes_de_socio(usuario):
     """Devuelve una lista de los clubes del socio."""

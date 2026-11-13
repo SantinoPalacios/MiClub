@@ -7,14 +7,15 @@ RUTA_DB = Path(__file__).parent.parent / "club.db"
 def autenticar(usuario, contrasenia):
     conexion = conectar(str(RUTA_DB))
 
-    socio = buscar_socio_por_usuario(conexion, usuario)
-
-    conexion.close()
+    try:
+        socio = buscar_socio_por_usuario(conexion, usuario)
+    finally:
+        conexion.close()
 
     if socio is None:
         return None
 
-    if socio.get_contrasenia() == contrasenia:
+    if socio.verificar_acceso(usuario, contrasenia):
         return socio
-
-    return None
+    else:
+        return None
