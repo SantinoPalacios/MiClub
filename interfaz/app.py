@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from PIL import Image, ImageTk
 
 from interfaz.login import PantallaLogin
 from interfaz.registro import PantallaRegistro
@@ -73,35 +74,33 @@ class ClubApp(tk.Tk):
         )
 
     def _crear_encabezado(self):
-        """Barra superior con el logo (o el nombre) del club."""
+        """Barra superior con el escudo del club."""
+
         encabezado = tk.Frame(self, bg=PRIMARIO, height=85)
         encabezado.pack(fill="x")
         encabezado.pack_propagate(False)
 
         self._logo = None
+
         if RUTA_LOGO.exists():
-            self._logo = tk.PhotoImage(file=str(RUTA_LOGO))
+            imagen = Image.open(RUTA_LOGO)
+            imagen = imagen.resize((60, 60), Image.Resampling.LANCZOS)
+            self._logo = ImageTk.PhotoImage(imagen)
+
             tk.Label(
                 encabezado,
                 image=self._logo,
                 bg=PRIMARIO,
-            ).pack(side="left", padx=25, pady=10)
-        else:
-            tk.Label(
+                ).pack(side="left", padx=25, pady=10)
+        
+        tk.Label(
                 encabezado,
-                text=NOMBRE_CLUB,
-                font=FUENTE_SUBTITULO,
+                text=LEMA_CLUB,
+                font=FUENTE_NEGRITA,
                 bg=PRIMARIO,
                 fg=TEXTO_CLARO,
-            ).pack(side="left", padx=25, pady=15)
+                ).pack(side="right", padx=25)
 
-        tk.Label(
-            encabezado,
-            text=LEMA_CLUB,
-            font=FUENTE_NEGRITA,
-            bg=PRIMARIO,
-            fg=TEXTO_CLARO,
-        ).pack(side="right", padx=25)
 
     def _crear_cuerpo(self):
         """Contenedor central: menú a la izquierda, contenido a la derecha."""

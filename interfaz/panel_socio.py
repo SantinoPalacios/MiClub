@@ -225,6 +225,7 @@ class PanelSocio(tk.Frame):
             lambda: self._pagar(tabla),
             ancho=25,
         )
+        boton_pagar.config(font=("Arial", 9, "bold"))
         boton_pagar.pack(pady=(0, 5))
 
         self._cargar_cuotas(tabla, boton_pagar)

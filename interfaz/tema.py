@@ -1,7 +1,7 @@
 from pathlib import Path
 # ── Identidad del club ─────────────────────────────────────────
-NOMBRE_CLUB = "MI CLUB"
-LEMA_CLUB = "SISTEMA DEL CLUB"
+NOMBRE_CLUB = "RIVER PLATE"
+LEMA_CLUB = "Vivir y jugar con Grandeza"
 SUBTITULO = "Sistema de gestión del club"
 ETIQUETA = "Socios | Cuotas | Clubes"
 
@@ -16,7 +16,7 @@ FILA_PAR = "#EAEAF2"           # rayado suave de las tablas
 ESTADO_ACTIVO = "#1E7A1E"      # verde para socios/cuotas activas
 ESTADO_SUSPENDIDO = "#B00020"  # rojo para socios suspendidos
 ESTADO_VENCIDO = "#B00020"     # rojo para cuotas vencidas
-ESTADO_PENDIENTE = "#B26A00"   # naranja para cuotas pendientes
+ESTADO_PENDIENTE = "#F57E00"   # naranja para cuotas pendientes
 
 # ── Fuentes ────────────────────────────────────────────────────
 FUENTE_TITULO = ("Arial", 20, "bold")
@@ -31,4 +31,4 @@ FUENTE_TABLA = ("Arial", 10)
 # ── Logo ───────────────────────────────────────────────────────
 # Cada grupo guarda su logo como club/logo.png; si el archivo no
 # existe, la interfaz muestra el nombre del club en texto.
-RUTA_LOGO = Path(__file__).parent.parent / "logo.png"
+RUTA_LOGO = Path(__file__).parent.parent / "multimedia" / "imagenes" / "river_logo.png"
