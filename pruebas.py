@@ -129,8 +129,20 @@
 
 
 
-from base_datos.base_datoss import conectar, crear_tablas
+from datetime import date
 from pathlib import Path
+
+from base_datos.base_datoss import (
+    asociar_socio_club,
+    conectar,
+    crear_tablas,
+    guardar_club,
+    guardar_cuota,
+    guardar_socio,
+)
+from modelo.club import Club
+from modelo.cuota import Cuota
+from modelo.socio import Socio
 from servicios.servicio_autenticacion import autenticar
 from servicios.servicio_cuotas import listar_cuotas, pagar_cuota
 from servicios.servicio_socios import (
@@ -139,6 +151,7 @@ from servicios.servicio_socios import (
     obtener_socio,
     reactivar_socio,
     registrar_socio,
+    suspender_socio,
 )
 
 RUTA = Path(__file__).parent / "club.db"
@@ -152,8 +165,40 @@ def preparar_base():
     conexion.close()
 
 
+def cargar_datos_prueba():
+    """Deja la base con socios, un club y cuotas para los casos de prueba."""
+    conexion = conectar(str(RUTA))
+    try:
+        guardar_socio(conexion, Socio(
+            "Isaias Lopez", 25, "DNI", "30123456", "Argentina",
+            date(2026, 1, 15), "Activo", "isaias", "clave123", "socio"
+        ))
+        guardar_socio(conexion, Socio(
+            "Ana Gomez", 30, "DNI", "31234567", "Argentina",
+            date(2026, 2, 1), "Activo", "ana", "clave456", "socio"
+        ))
+        guardar_socio(conexion, Socio(
+            "Uma Vega", 21, "DNI", "32345678", "Colombia",
+            date(2026, 6, 16), "Activo", "uma", "clave789", "socio"
+        ))
+
+        guardar_club(conexion, Club(
+            "Racing", "Club de avellaneda", "Avellaneda",
+            "Facundo Perez", date(1903, 5, 25)
+        ))
+        asociar_socio_club(conexion, "isaias", "Racing")
+
+        guardar_cuota(conexion, "isaias",
+                      Cuota("Pendiente", date(2026, 8, 10), "Agosto"))
+        guardar_cuota(conexion, "isaias",
+                      Cuota("Pagada", date(2026, 9, 10), "Septiembre"))
+    finally:
+        conexion.close()
+
+
 def main():
     preparar_base()
+    cargar_datos_prueba()
     print("Base de prueba creada.\n")
 
     socio = autenticar("isaias", "clave123")

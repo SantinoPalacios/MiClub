@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from interfaz.login import VentanaLogin
+from interfaz.login import PantallaLogin
+from interfaz.registro import PantallaRegistro
 from interfaz.panel_admin import PanelAdmin
 from interfaz.panel_socio import PanelSocio
 from interfaz.tema import (
@@ -229,6 +230,16 @@ class ClubApp(tk.Tk):
             ancho=25,
         ).pack(pady=(30, 10))
 
+        boton_registro = self.crear_boton(
+            self.contenido,
+            "REGISTRAR CUENTA",
+            self.mostrar_registro,
+            ancho=25,
+            borde=True,
+        )
+        boton_registro.config(bg=PANEL, fg=PRIMARIO)
+        boton_registro.pack(pady=5)
+
         boton_salir = self.crear_boton(
             self.contenido,
             "SALIR",
@@ -242,7 +253,12 @@ class ClubApp(tk.Tk):
     def mostrar_login(self):
         self.limpiar_contenido()
         self.ocultar_menu()
-        VentanaLogin(self.contenido, self)
+        PantallaLogin(self.contenido, self)
+
+    def mostrar_registro(self):
+        self.limpiar_contenido()
+        self.ocultar_menu()
+        PantallaRegistro(self.contenido, self)
 
     # ── Transiciones de sesión ─────────────────────────────────
 

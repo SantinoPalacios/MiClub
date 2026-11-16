@@ -13,6 +13,11 @@ class Socio(Persona):
         self.__contrasenia = contrasenia
         self.rol = rol
 
+    @property
+    def estado(self):
+        """Alias de estado_cuota con el nombre que usan la interfaz y las pruebas."""
+        return self.estado_cuota
+
     def get_usuario(self):
         return self.__usuario
 
@@ -80,17 +85,17 @@ class Socio(Persona):
         return cantidad
 
     def suspender_socio(self):
-        if self.estado_cuota == "suspendido":
+        if self.estado_cuota == "Suspendido":
             return "El socio se encuentra suspendido"
         else:
-            self.estado_cuota = "suspendido"
+            self.estado_cuota = "Suspendido"
             return "El socio está suspendido"
 
     def reactivar_socio(self):
-        if self.estado_cuota == "activo":
-            return "El socio se encuentra activo"
+        if self.estado_cuota == "Activo":
+            return "El socio ya está activo, no requiere reactivación"
         else:
-            self.estado_cuota = "activo"
+            self.estado_cuota = "Activo"
             return "El socio está reactivado"
 
     def actualizar_contrasenia(self, contrasenia_actual, contrasenia_nueva):

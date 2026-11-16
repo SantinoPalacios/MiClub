@@ -1,5 +1,5 @@
 from datetime import date
-from clubCategoria import ClubCategoria
+from modelo.clubCategoria import ClubCategoria
 
 class Administrador(ClubCategoria):
     def __init__(self, nombre, descripcion, ubicacion, presidente, fecha_fundacion, nombre_usuario, usuario, contrasenia):

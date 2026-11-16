@@ -360,7 +360,8 @@ def listar_clubes_de_socio(conexion, usuario):
     clubes = []
     # Crear un objeto Club con sus cinco atributos
     for nombre, descripcion, ubicacion, presidente, fecha_fundacion in cursor.fetchall():
-        club = Club(nombre, descripcion, ubicacion, presidente, fecha_fundacion)
+        club = Club(nombre, descripcion, ubicacion, presidente,
+                    date.fromisoformat(fecha_fundacion))
         clubes.append(club)
 
     return clubes
@@ -392,6 +393,34 @@ def listar_socio(conexion):
         socios.append(socio)
 
     return socios
+
+def cambiar_estado_socio(conexion, usuario, estado):
+    """Cambia el estado del socio indicado (Activo o Suspendido)."""
+    cursor = conexion.cursor()
+
+    cursor.execute("SELECT estado FROM socios WHERE usuario = ?", (usuario,))
+    fila = cursor.fetchone()
+
+    if fila is None:
+        return "El socio no existe."
+
+    estado_actual = fila[0]
+
+    if estado_actual == estado:
+        if estado == "Suspendido":
+            return f"El socio {usuario} ya se encuentra suspendido."
+        return f"El socio {usuario} ya se encuentra activo, no requiere reactivación."
+
+    cursor.execute(
+        "UPDATE socios SET estado = ? WHERE usuario = ?",
+        (estado, usuario)
+    )
+    conexion.commit()
+
+    if estado == "Suspendido":
+        return f"El socio {usuario} fue suspendido."
+    return f"El socio {usuario} fue reactivado."
+
 
 def pagar_cuota(conexion, usuario, periodo):
     """Cambia el estado de la cuota indicada a Pagada."""

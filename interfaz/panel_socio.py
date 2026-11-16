@@ -186,7 +186,7 @@ class PanelSocio(tk.Frame):
         for club in clubes:
             tk.Label(
                 self,
-                text=f"• {club.informacion()}",
+                text=f"• {club.mostrar_info()}",
                 font=FUENTE,
                 bg=PANEL,
                 fg=TEXTO,

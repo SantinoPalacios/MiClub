@@ -2,6 +2,7 @@ from datetime import date
 from pathlib import Path
 from base_datos.base_datoss import (
     buscar_socio_por_usuario,
+    cambiar_estado_socio,
     conectar,
     guardar_socio,
     listar_clubes_de_socio as listar_clubes_en_bd,
@@ -16,6 +17,33 @@ def listar_socios():
     conexion = conectar(str(RUTA_DB))
     try:
         return listar_socio(conexion)
+    finally:
+        conexion.close()
+
+
+def obtener_socio(usuario):
+    """Devuelve el socio con ese usuario, o None si no existe."""
+    conexion = conectar(str(RUTA_DB))
+    try:
+        return buscar_socio_por_usuario(conexion, usuario)
+    finally:
+        conexion.close()
+
+
+def suspender_socio(usuario):
+    """Cambia el estado del socio a Suspendido."""
+    conexion = conectar(str(RUTA_DB))
+    try:
+        return cambiar_estado_socio(conexion, usuario, "Suspendido")
+    finally:
+        conexion.close()
+
+
+def reactivar_socio(usuario):
+    """Cambia el estado del socio a Activo."""
+    conexion = conectar(str(RUTA_DB))
+    try:
+        return cambiar_estado_socio(conexion, usuario, "Activo")
     finally:
         conexion.close()
 
@@ -59,6 +87,9 @@ def registrar_socio(nombre, edad, tipo_identificacion, identificacion, nacionali
 
     conexion = conectar(str(RUTA_DB))
     try:
+        existente = buscar_socio_por_usuario(conexion, usuario)
+        if existente is not None:
+            raise ValueError(f"El usuario '{usuario}' ya está registrado.")
         guardar_socio(conexion, socio)
     finally:
         conexion.close()
