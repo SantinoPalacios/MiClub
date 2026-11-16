@@ -1,199 +1,142 @@
 import tkinter as tk
 from tkinter import messagebox
-from interfaz.panel_admin import PanelAdmin
-from interfaz.panel_socio import PanelSocio
+
+from interfaz.tema import (
+    FUENTE,
+    FUENTE_CHICA,
+    FUENTE_NEGRITA,
+    FUENTE_TITULO,
+    NOMBRE_CLUB,
+    PANEL,
+    PRIMARIO,
+    TEXTO,
+)
 from servicios.servicio_autenticacion import autenticar
 
 
-ROJO = "#6B0504"
-BLANCO = "#F4F4F9"
-GRIS = "#F2F2F2"
-TEXTO = "#0B0A0A"
+class PantallaLogin(tk.Frame):
+    """Formulario de ingreso. Al validar, avisa a la app principal."""
 
+    def __init__(self, padre, app):
+        super().__init__(padre, bg=PANEL)
+        self.app = app
+        self.pack(fill="both", expand=True)
+        self._crear_widgets()
 
-class VentanaLogin(tk.Tk):
-
-    def __init__(self):
-        super().__init__()
-
-        self.title("River Plate | Inicio de sesión")
-        self.geometry("950x650")
-        self.minsize(850, 550)
-        self.configure(bg=GRIS)
-
-        # Encabezado.
-        encabezado = tk.Frame(self, bg=ROJO, height=85)
-        encabezado.pack(fill="x")
-        encabezado.pack_propagate(False)
-
+    def _crear_widgets(self):
         tk.Label(
-            encabezado,
-            text="RIVER PLATE",
-            font=("Arial", 24, "bold"),
-            bg=ROJO,
-            fg=BLANCO
-        ).pack(side="left", padx=25, pady=15)
-
-        tk.Label(
-            encabezado,
-            text="SISTEMA DEL CLUB",
-            font=("Arial", 12, "bold"),
-            bg=ROJO,
-            fg=BLANCO
-        ).pack(side="right", padx=25)
-
-        # Contenedor principal.
-        self.contenido = tk.Frame(self, bg=BLANCO)
-        self.contenido.pack(fill="both", expand=True, padx=12, pady=12)
-
-        self.crear_login()
-
-        # Permite ingresar presionando Enter.
-        self.bind("<Return>", lambda event: self.iniciar_sesion())
-
-    def crear_login(self):
-
-        tk.Label(
-            self.contenido,
+            self,
             text="INICIAR SESIÓN",
-            font=("Arial", 20, "bold"),
-            bg=BLANCO,
-            fg=ROJO
-        ).pack(pady=(60, 15))
+            font=FUENTE_TITULO,
+            bg=PANEL,
+            fg=PRIMARIO,
+        ).pack(pady=(40, 8))
 
         tk.Label(
-            self.contenido,
-            text="Ingresá con tu cuenta de River Plate.",
-            font=("Arial", 11),
-            bg=BLANCO,
-            fg=TEXTO
+            self,
+            text=f"Ingresá con tu cuenta de {NOMBRE_CLUB}.",
+            font=FUENTE,
+            bg=PANEL,
+            fg=TEXTO,
         ).pack(pady=5)
 
-        formulario = tk.Frame(self.contenido, bg=BLANCO)
-        formulario.pack(pady=20)
+        formulario = tk.Frame(self, bg=PANEL)
+        formulario.pack(pady=25)
 
-        # Nombre de usuario.
         tk.Label(
             formulario,
-            text="Nombre de usuario:",
-            font=("Arial", 11, "bold"),
-            bg=BLANCO,
-            fg=TEXTO
+            text="Usuario:",
+            font=FUENTE_NEGRITA,
+            bg=PANEL,
+            fg=TEXTO,
         ).pack(anchor="w")
 
         self.entrada_usuario = tk.Entry(
             formulario,
-            font=("Arial", 12),
-            width=27
+            font=FUENTE,
+            width=27,
         )
-        self.entrada_usuario.pack(anchor="w", pady=(5, 15))
+        self.entrada_usuario.pack(anchor="w", pady=(4, 15))
 
-        # Contraseña.
         tk.Label(
             formulario,
             text="Contraseña:",
-            font=("Arial", 11, "bold"),
-            bg=BLANCO,
-            fg=TEXTO
+            font=FUENTE_NEGRITA,
+            bg=PANEL,
+            fg=TEXTO,
         ).pack(anchor="w")
 
-        campo_frame = tk.Frame(formulario, bg=BLANCO)
-        campo_frame.pack(pady=5, anchor="w")
+        fila_contrasenia = tk.Frame(formulario, bg=PANEL)
+        fila_contrasenia.pack(anchor="w", pady=4)
 
         self.entrada_contrasenia = tk.Entry(
-            campo_frame,
-            font=("Arial", 12),
+            fila_contrasenia,
+            font=FUENTE,
             width=27,
-            show="*"
+            show="*",
         )
         self.entrada_contrasenia.pack(side="left")
 
-        # Botón para mostrar u ocultar la contraseña.
-        self.boton_ojo = tk.Button(
-            campo_frame,
-            text="👁",
-            bg=BLANCO,
+        self.boton_ver = tk.Button(
+            fila_contrasenia,
+            text="Mostrar",
+            font=FUENTE_CHICA,
+            bg=PANEL,
             fg=TEXTO,
             relief="flat",
             cursor="hand2",
-            command=self.alternar_contrasenia
+            command=self._alternar_contrasenia,
         )
-        self.boton_ojo.pack(side="left", padx=5)
+        self.boton_ver.pack(side="left", padx=6)
 
-        # Botón de ingreso.
+        self.app.crear_boton(
+            self,
+            "INGRESAR",
+            self._ingresar,
+            ancho=22,
+        ).pack(pady=(20, 10))
+
         tk.Button(
-            self.contenido,
-            text="INGRESAR",
-            command=self.iniciar_sesion,
-            bg=ROJO,
-            fg=BLANCO,
-            font=("Arial", 12, "bold"),
-            width=22,
-            height=2,
-            cursor="hand2"
-        ).pack(pady=15)
+            self,
+            text="Volver al inicio",
+            font=FUENTE,
+            bg=PANEL,
+            fg=TEXTO,
+            relief="flat",
+            cursor="hand2",
+            command=self.app.mostrar_bienvenida,
+        ).pack(pady=5)
 
         self.entrada_usuario.focus()
+        self.bind("<Return>", lambda evento: self._ingresar())
 
-    def alternar_contrasenia(self):
-
+    def _alternar_contrasenia(self):
         if self.entrada_contrasenia.cget("show") == "*":
             self.entrada_contrasenia.configure(show="")
-            self.boton_ojo.configure(text="🫣")
-
+            self.boton_ver.configure(text="Ocultar")
         else:
             self.entrada_contrasenia.configure(show="*")
-            self.boton_ojo.configure(text="👁")
+            self.boton_ver.configure(text="Mostrar")
 
-    def iniciar_sesion(self):
-
+    def _ingresar(self):
         usuario = self.entrada_usuario.get().strip()
         contrasenia = self.entrada_contrasenia.get()
 
-        # Validar que los campos no estén vacíos.
         if not usuario or not contrasenia:
             messagebox.showwarning(
-                "Campos vacíos",
-                "Debe completar todos los campos",
-                parent=self
+                "Campos incompletos",
+                "Completá el usuario y la contraseña.",
             )
             return
 
-        try:
-            # Autenticar mediante el servicio.
-            socio = autenticar(usuario, contrasenia)
-
-            # Comprobar si las credenciales son incorrectas.
-            if socio is None:
-                messagebox.showerror(
-                    "Error de acceso",
-                    "El usuario o la contraseña son incorrectos.",
-                    parent=self
-                )
-                return
-
-            # Abrir el panel correspondiente según el rol.
-            if socio.rol == "admin":
-                PanelAdmin(self, socio)
-
-            elif socio.rol == "socio":
-                PanelSocio(self, socio)
-
-            else:
-                messagebox.showerror(
-                    "Error",
-                    "El rol del usuario no es válido.",
-                    parent=self
-                )
-
-        except Exception as error:
+        socio = autenticar(usuario, contrasenia)
+        if socio is None:
             messagebox.showerror(
-                "Error",
-                f"No se pudo iniciar sesión:\n{error}",
-                parent=self
+                "Error de acceso",
+                "Usuario o contraseña incorrectos.",
             )
+            self.entrada_contrasenia.delete(0, tk.END)
+            self.entrada_contrasenia.focus()
+            return
 
-
-if __name__ == "__main__":
-    app = VentanaLogin()
-    app.mainloop()
+        self.app.iniciar_sesion(socio)
